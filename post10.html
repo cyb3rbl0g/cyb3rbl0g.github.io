@@ -158,7 +158,7 @@
                         <img class="img-responsive" src="img/post10/image7.png" alt="">
                     </a>
 					
-					<h2 class="section-heading">Path to the root flag</h2>
+					<h2 class="section-heading">Path to root</h2>
 					
 					<p>On the system, I find a base32 SUID file that allows you to read files with root access</p>
 					
@@ -168,10 +168,16 @@
 					
 					<pre><code>find / -perm -u=s -type f 2>/dev/null</code></pre>
 					
-					<p>With base32, I get the contents of the /root/flag.txt file encoded in base32 encoding, in order to decrypt it I use the decode option.</p>
+					<p>With base32, I get the contents of the /root/.ssh/id_rsa file encoded in base32 encoding, in order to decrypt it I use the decode option.</p>
 					
 					<a href="img/post10/image9.png">
                         <img class="img-responsive" src="img/post10/image9.png" alt="">
+                    </a>
+					
+					<p>Now when I have an ssh authorization key, I connect to the root user via ssh and get the root flag</p>
+					
+					<a href="img/post10/image10.png">
+                        <img class="img-responsive" src="img/post10/image10.png" alt="">
                     </a>
 					
 					<pre><code>Flag{Sun_CTF_220_5_G31sha}</code></pre>

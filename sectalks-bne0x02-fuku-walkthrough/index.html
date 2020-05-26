@@ -9,20 +9,20 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Walkthrough Os-Hax vulnhub CTF</title>
+    <title>Walkthrough Fuku vulnhub CTF</title>
 	
 	<!-- Favicon -->
-	<link rel="shortcut icon" href="img/favicon.ico" type="image/icon"> 
-	<link rel="icon" href="img/favicon.ico" type="image/icon">
+	<link rel="shortcut icon" href="../img/favicon.ico" type="image/icon"> 
+	<link rel="icon" href="../img/favicon.ico" type="image/icon">
 	
     <!-- Bootstrap Core CSS -->
-    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Theme CSS -->
-    <link href="css/clean-blog.min.css" rel="stylesheet">
+    <link href="../css/clean-blog.min.css" rel="stylesheet">
 
     <!-- Custom Fonts -->
-    <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="../vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
 
@@ -53,16 +53,16 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
                     <li>
-                        <a href="index.html">Home</a>
+                        <a href="../">Home</a>
                     </li>
                     <li>
-                        <a href="about.html">About</a>
+                        <a href="../about/">About</a>
                     </li>
                     <li>
-                        <a href="post1.html">First Post</a>
+                        <a href="../os-hax-walkthrough/">First Post</a>
                     </li>
                     <li>
-                        <a href="contact.html">Contact</a>
+                        <a href="../contact/">Contact</a>
                     </li>
                 </ul>
             </div>
@@ -73,14 +73,14 @@
 
     <!-- Page Header -->
     <!-- Set your background image for this header on the line below. -->
-    <header class="intro-header" style="background-image: url('img/post1/hox.jpg')">
+    <header class="intro-header" style="background-image: url('../img/post2/fuku.png')">
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                     <div class="post-heading">
-                        <h1>Os-Hax</h1>
-                        <h2 class="subheading">Difficulty: Easy</h2>
-                        <span class="meta">Posted by <a href="about.html">Admin</a> on December 2, 2019</span>
+                        <h1>SecTalks: BNE0x02 - Fuku</h1>
+                        <h2 class="subheading">Difficulty: Intermediate</h2>
+                        <span class="meta">Posted by <a href="../about/">Admin</a> on December 3, 2019</span>
                     </div>
                 </div>
             </div>
@@ -92,82 +92,77 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                    <p><a href="https://www.vulnhub.com/entry/hacknos-os-hax,389/">CTF link</a></p>
-					<h2 class="section-heading">Boot2User</h2>
+                    <p><a href="https://www.vulnhub.com/entry/sectalks-bne0x02-fuku,140/">CTF link</a></p>
+					<h2 class="section-heading">Scanning and Enum3ration</h2>
 
-                    <p>At this stage, we will scan the network and find the ip address of the machine.</p>
+                    <p>First thing I do is find the ip address and port scan, after that I find the active Apache server on port 13370.</p>
 					
-					<a href="img/post1/image1.png">
-                        <img class="img-responsive" src="img/post1/image1.png" alt="">
+					<a href="../img/post2/image1.png">
+                        <img class="img-responsive" src="../img/post2/image1.png" alt="">
                     </a>
 					
-					<pre><code>arp-scan -l</code></pre>
-
-                    <p>As we see this is 192.168.2.102. Next we will see open ports.</p>
-					
-					<a href="img/post1/image2.png">
-                        <img class="img-responsive" src="img/post1/image2.png" alt="">
-                    </a>
+                    <pre><code>arp-scan -l</code></pre>
 					<pre><code>nmap 192.168.2.102</code></pre>
+
+                    <p>After going to a webpage, I see a web site running on joomla.</p>
 					
-					<p>Open ssh and apache, so let's check the web page.</p>
-					
-					<a href="img/post1/image3.png">
-                        <img class="img-responsive" src="img/post1/image3.png" alt="">
+					<a href="../img/post2/image2.png">
+                        <img class="img-responsive" src="../img/post2/image2.png" alt="">
                     </a>
 					
-					<p>Now let's find something interesting.</p>
+					<h2 class="section-heading">Getting shell</h2>
 					
-					<pre><code>nikto -h 192.168.2.102 -p 80</code></pre>
+					<p>In source code of page you can find the version of joomla.</p>
 					
-					<a href="img/post1/image4.png">
-                        <img class="img-responsive" src="img/post1/image4.png" alt="">
+					<a href="../img/post2/image3.png">
+                        <img class="img-responsive" src="../img/post2/image3.png" alt="">
                     </a>
 					
-					<p>In directory /img/ nikto found an interesting file called flaghost.png. After scanning the image through exiftool, I get a new directory names, in which I find the file "flag2.txt"</p>
+					<p>Yeah, this version of joomla has many vulnerabilities, but in this case I need an exploit for changing the administrator password (Joomla! 1.5.x - 'Token' Remote Admin Change Password).</p>
 					
-					<pre><code>192.168.2.102/passw@45/</code></pre>
-					
-					<a href="img/post1/image5.png">
-                        <img class="img-responsive" src="img/post1/image5.png" alt="">
+					<a href="../img/post2/image4.png">
+                        <img class="img-responsive" src="../img/post2/image4.png" alt="">
                     </a>
 					
-					<a href="img/post1/image6.png">
-                        <img class="img-responsive" src="img/post1/image6.png" alt="">
+					<pre><code>searchsploit joomla 1.5</code></pre>
+					
+					<p>After changing the administrator password, I successfully login into the site control panel.</p>
+					
+					<a href="../img/post2/image5.png">
+                        <img class="img-responsive" src="../img/post2/image5.png" alt="">
                     </a>
 					
-					<p>After decrypting a mysterious file that is encrypted with the Brainfuck cipher, I received data for ssh authorization.</p>
+					<p>After loading php reverse shell i get www-data.</p>
 					
-					<pre><code>web:Hacker@4514</code></pre>
-					
-					<a href="img/post1/image7.png">
-                        <img class="img-responsive" src="img/post1/image7.png" alt="">
+					<a href="../img/post2/image6.png">
+                        <img class="img-responsive" src="../img/post2/image6.png" alt="">
                     </a>
 					
-					<p>In home directory I found a flag.</p>
+					<h2 class="section-heading">Privil3ge escalation</h2>
 					
-					<a href="img/post1/image8.png">
-                        <img class="img-responsive" src="img/post1/image8.png" alt="">
-                    </a>
-					
-                    <h2 class="section-heading">Boot2R00t</h2>
-					
-					<p>Using following command i see that I can run awk using root privileges.</p>
+					<p>In running processes you can see running Chkrootkit 0.49</p>
 				
-                    <a href="img/post1/image9.png">
-                        <img class="img-responsive" src="img/post1/image9.png" alt="">
+                    <a href="../img/post2/image7.png">
+                        <img class="img-responsive" src="../img/post2/image7.png" alt="">
                     </a>
-					<pre><code>sudo -l</code></pre>
 					
-					<p>Now i get root using awk, thank awk xD</p>
+					<pre><code>ps -aux</code></pre>
 					
-					<a href="img/post1/image10.png">
-                        <img class="img-responsive" src="img/post1/image10.png" alt="">
+					<a href="../img/post2/image8.png">
+                        <img class="img-responsive" src="../img/post2/image8.png" alt="">
                     </a>
-                    
-					<pre><code>sudo /usr/bin/awk 'BEGIN {system("/bin/sh")}'</code></pre>
 					
-					<p>The all. Thanks <a href="https://www.vulnhub.com/author/rahul-gehlaut,656/">Rahul Gehlaut</a> for a good CTF.</p>
+					<p>After analyzing the vulnerability on exploitdb, I realized that I needed to create a file in the / tmp directory that should change the administrator password.</p>
+					
+					<a href="../img/post2/image9.png">
+                        <img class="img-responsive" src="../img/post2/image9.png" alt="">
+                    </a>
+					
+					<p>Now connect via ssh and get root.</p>
+					
+					<a href="../img/post2/image10.png">
+                        <img class="img-responsive" src="../img/post2/image10.png" alt="">
+                    </a>
 
                 </div>
             </div>
@@ -214,17 +209,17 @@
     </footer>
 
     <!-- jQuery -->
-    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="../vendor/jquery/jquery.min.js"></script>
 
     <!-- Bootstrap Core JavaScript -->
-    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../vendor/bootstrap/js/bootstrap.min.js"></script>
 
     <!-- Contact Form JavaScript -->
-    <script src="js/jqBootstrapValidation.js"></script>
-    <script src="js/contact_me.js"></script>
+    <script src="../js/jqBootstrapValidation.js"></script>
+    <script src="../js/contact_me.js"></script>
 
     <!-- Theme JavaScript -->
-    <script src="js/clean-blog.min.js"></script>
+    <script src="../js/clean-blog.min.js"></script>
 
 </body>
 

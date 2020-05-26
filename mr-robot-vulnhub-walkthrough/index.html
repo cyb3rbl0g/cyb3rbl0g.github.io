@@ -9,20 +9,20 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Walkthrough Fuku vulnhub CTF</title>
+    <title>Walkthrough Mr-Robot vulnhub CTF</title>
 	
 	<!-- Favicon -->
-	<link rel="shortcut icon" href="img/favicon.ico" type="image/icon"> 
-	<link rel="icon" href="img/favicon.ico" type="image/icon">
+	<link rel="shortcut icon" href="../img/favicon.ico" type="image/icon"> 
+	<link rel="icon" href="../img/favicon.ico" type="image/icon">
 	
     <!-- Bootstrap Core CSS -->
-    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Theme CSS -->
-    <link href="css/clean-blog.min.css" rel="stylesheet">
+    <link href="../css/clean-blog.min.css" rel="stylesheet">
 
     <!-- Custom Fonts -->
-    <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="../vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
 
@@ -53,16 +53,16 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
                     <li>
-                        <a href="index.html">Home</a>
+                        <a href="../">Home</a>
                     </li>
                     <li>
-                        <a href="about.html">About</a>
+                        <a href="../about/">About</a>
                     </li>
                     <li>
-                        <a href="post1.html">First Post</a>
+                        <a href="../os-hax-walkthrough/">First Post</a>
                     </li>
                     <li>
-                        <a href="contact.html">Contact</a>
+                        <a href="../contact/">Contact</a>
                     </li>
                 </ul>
             </div>
@@ -73,14 +73,14 @@
 
     <!-- Page Header -->
     <!-- Set your background image for this header on the line below. -->
-    <header class="intro-header" style="background-image: url('img/post2/fuku.png')">
+    <header class="intro-header" style="background-image: url('../img/post3/robot.png')">
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                     <div class="post-heading">
-                        <h1>SecTalks: BNE0x02 - Fuku</h1>
-                        <h2 class="subheading">Difficulty: Intermediate</h2>
-                        <span class="meta">Posted by <a href="about.html">Admin</a> on December 3, 2019</span>
+                        <h1>Mr-Robot: 1</h1>
+                        <h2 class="subheading">Difficulty: easy</h2>
+                        <span class="meta">Posted by <a href="../about/">Admin</a> on December 3, 2019</span>
                     </div>
                 </div>
             </div>
@@ -92,78 +92,95 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                    <p><a href="https://www.vulnhub.com/entry/sectalks-bne0x02-fuku,140/">CTF link</a></p>
-					<h2 class="section-heading">Scanning and Enum3ration</h2>
+                    <p><a href="https://www.vulnhub.com/entry/mr-robot-1,151/">CTF link</a></p>
+					<h2 class="section-heading">Explor1ng</h2>
 
-                    <p>First thing I do is find the ip address and port scan, after that I find the active Apache server on port 13370.</p>
+                    <p>Good day, today I walkthrough CTF dedicated to my favorite TV series "Mr Robot". I will use the netdiscover utility to determine the desired ip address.</p>
 					
-					<a href="img/post2/image1.png">
-                        <img class="img-responsive" src="img/post2/image1.png" alt="">
+					<a href="../img/post3/image1.png">
+                        <img class="img-responsive" src="../img/post3/image1.png" alt="">
                     </a>
-					
-                    <pre><code>arp-scan -l</code></pre>
-					<pre><code>nmap 192.168.2.102</code></pre>
 
-                    <p>After going to a webpage, I see a web site running on joomla.</p>
+                    <pre><code>netdiscover</code></pre>
+
+                    <p>Scanning open ports, you can see the closed ssh port and two web ports https 443 and http 80.</p>
 					
-					<a href="img/post2/image2.png">
-                        <img class="img-responsive" src="img/post2/image2.png" alt="">
+					<a href="../img/post3/image2.png">
+                        <img class="img-responsive" src="../img/post3/image2.png" alt="">
                     </a>
 					
-					<h2 class="section-heading">Getting shell</h2>
+					<p>On port 80, I see something like a UNIX terminal, but it's just script.</p>
 					
-					<p>In source code of page you can find the version of joomla.</p>
-					
-					<a href="img/post2/image3.png">
-                        <img class="img-responsive" src="img/post2/image3.png" alt="">
+					<a href="../img/post3/image3.png">
+                        <img class="img-responsive" src="../img/post3/image3.png" alt="">
                     </a>
 					
-					<p>Yeah, this version of joomla has many vulnerabilities, but in this case I need an exploit for changing the administrator password (Joomla! 1.5.x - 'Token' Remote Admin Change Password).</p>
+					<p>In the robots.txt file I find two interesting files, the first one is a wordlist and second is the first flag.</p>
 					
-					<a href="img/post2/image4.png">
-                        <img class="img-responsive" src="img/post2/image4.png" alt="">
+					<a href="../img/post3/image4.png">
+                        <img class="img-responsive" src="../img/post3/image4.png" alt="">
                     </a>
 					
-					<pre><code>searchsploit joomla 1.5</code></pre>
-					
-					<p>After changing the administrator password, I successfully login into the site control panel.</p>
-					
-					<a href="img/post2/image5.png">
-                        <img class="img-responsive" src="img/post2/image5.png" alt="">
+					<a href="../img/post3/image5.png">
+                        <img class="img-responsive" src="../img/post3/image5.png" alt="">
                     </a>
 					
-					<p>After loading php reverse shell i get www-data.</p>
+					<h2 class="section-heading">Shell</h2>
 					
-					<a href="img/post2/image6.png">
-                        <img class="img-responsive" src="img/post2/image6.png" alt="">
+					<p>Using dirbuster utility i find wordpress blog and login page.</p>
+					
+					<a href="../img/post3/image6.png">
+                        <img class="img-responsive" src="../img/post3/image6.png" alt="">
                     </a>
 					
-					<h2 class="section-heading">Privil3ge escalation</h2>
+					<p>Since the main character is called elliot we can assume that it will be username. Using the earlier received wordlist and WPScan I will find out credentials for WordPress.</p>
 					
-					<p>In running processes you can see running Chkrootkit 0.49</p>
+					<a href="../img/post3/image7.png">
+                        <img class="img-responsive" src="../img/post3/image7.png" alt="">
+                    </a>
+					
+					<pre><code>wpscan --usernames Elliot --passwords /root/Mr_Robot/fsocity.dic --url http://192.168.2.102/wp-login.php</code></pre>
+					
+					<pre><code>Elliot:ER28–0652</code></pre>
+					
+					<p>Now i load php reverse shell and log in</p>
 				
-                    <a href="img/post2/image7.png">
-                        <img class="img-responsive" src="img/post2/image7.png" alt="">
+                    <a href="../img/post3/image8.png">
+                        <img class="img-responsive" src="../img/post3/image8.png" alt="">
                     </a>
 					
-					<pre><code>ps -aux</code></pre>
+					<h2 class="section-heading">Boot2User</h2>
 					
-					<a href="img/post2/image8.png">
-                        <img class="img-responsive" src="img/post2/image8.png" alt="">
+					<p>In the robot user’s home folder, I find the file with the password encrypted by the MD5 algorithm, to crack it I go to the hashkiller website and get the user password.</p>
+					
+					<a href="../img/post3/image9.png">
+                        <img class="img-responsive" src="../img/post3/image9.png" alt="">
                     </a>
 					
-					<p>After analyzing the vulnerability on exploitdb, I realized that I needed to create a file in the / tmp directory that should change the administrator password.</p>
+					<pre><code>robot:abcdefghijklmnopqrstuvwxyz</code></pre>
 					
-					<a href="img/post2/image9.png">
-                        <img class="img-responsive" src="img/post2/image9.png" alt="">
+					<p>Since the ssh port the port is closed I use su to get user rights. And I get 2 flag.</p>
+					
+					
+					<a href="../img/post3/image10.png">
+                        <img class="img-responsive" src="../img/post3/image10.png" alt="">
                     </a>
 					
-					<p>Now connect via ssh and get root.</p>
+					<pre><code>python -c 'import pty; pty.spawn("/bin/sh")'</code></pre>
 					
-					<a href="img/post2/image10.png">
-                        <img class="img-responsive" src="img/post2/image10.png" alt="">
+					<pre><code>su robot</code></pre>
+					
+					<h2 class="section-heading">R00t access</h2>
+					
+					<p>Using nmap, I get root access and get the last third flag.</p>
+					
+					<a href="../img/post3/image11.png">
+                        <img class="img-responsive" src="../img/post3/image11.png" alt="">
                     </a>
-
+					
+					<pre><code>/usr/local/bin/nmap --interactive</code></pre>
+					<pre><code>!sh</code></pre>
+					
                 </div>
             </div>
         </div>
@@ -209,17 +226,17 @@
     </footer>
 
     <!-- jQuery -->
-    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="../vendor/jquery/jquery.min.js"></script>
 
     <!-- Bootstrap Core JavaScript -->
-    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../vendor/bootstrap/js/bootstrap.min.js"></script>
 
     <!-- Contact Form JavaScript -->
-    <script src="js/jqBootstrapValidation.js"></script>
-    <script src="js/contact_me.js"></script>
+    <script src="../js/jqBootstrapValidation.js"></script>
+    <script src="../js/contact_me.js"></script>
 
     <!-- Theme JavaScript -->
-    <script src="js/clean-blog.min.js"></script>
+    <script src="../js/clean-blog.min.js"></script>
 
 </body>
 

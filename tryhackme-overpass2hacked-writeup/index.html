@@ -10,11 +10,11 @@
     <meta name="author" content="">
 
     <title>TryHackMe: Overpass 2 Write-Up</title>
-	
+
 	<!-- Favicon -->
-	<link rel="shortcut icon" href="../img/favicon.ico" type="image/icon"> 
+	<link rel="shortcut icon" href="../img/favicon.ico" type="image/icon">
 	<link rel="icon" href="../img/favicon.ico" type="image/icon">
-    
+
 	<!-- Bootstrap Core CSS -->
     <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
@@ -86,15 +86,15 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                    
+
                     <p><a href="https://tryhackme.com/room/overpass2hacked">CTF link</a></p>
-					
+
 					<p>Good day. In today's CTF, I analyze a network traffic dump, analyze the backdoor code and access the server after a hack.</p>
-					
+
 					<li>Goal: Find out how the attacker got access to the server by analyzing the network traffic dump, analyzing the backdoor code, and get root on the server.</li>
-					
+
 					<h2 class="section-heading">Story</h2>
-                    
+
                     <p>Overpass has been hacked! The SOC team (Paradox, congratulations on the promotion) noticed suspicious activity on a late night shift while looking at shibes, and managed to capture packets as the attack happened.</p>
 
                     <p>Can you work out how the attacker got in, and hack your way back into Overpass' production server?</p>
@@ -102,13 +102,13 @@
                     <p>Note: Although this room is a walkthrough, it expects familiarity with tools and Linux. I recommend learning basic Wireshark and completing CC: Pentesting and Learn Linux as a bare minimum.</p>
 
                     <p>md5sum of PCAP file: </p>
-                    
+
                     <pre><code>11c3b2e9221865580295bc662c35c6dc</code></pre>
 
                     <h2 class="section-heading">Forensics - Analyse the PCAP</h2>
 
                     <p>First, check the md5sum of the file.</p>
-					
+
 					<a href="../img/post14/image1.png">
                         <img class="img-responsive" src="../img/post14/image1.png" alt="">
                     </a>
@@ -118,13 +118,13 @@
                     <h3>What was the URL of the page they used to upload a reverse shell?</h3>
 
                     <p>Opening the network packet dump in wireshark, you can see that the computer with the IP address 192.168.170.145 sent a GET request to the /d*********t/ directory.</p>
-                    
+
                     <a href="../img/post14/image2.png">
                         <img class="img-responsive" src="../img/post14/image2.png" alt="">
                     </a>
 
                     <pre><code>/d*********t/</code></pre>
-					
+
 					<h3>What payload did the attacker use to gain access?</h3>
 
                     <p>I also noticed that the computer with the IP address 192.168.170.145 uploaded the file using      <b>/d*********t/upload.php</b> after sending the POST request. If you look at TCP Stream, you can see what malicious code was uploaded by the attacker to the server.</p>
@@ -147,42 +147,42 @@
                     </a>
 
                     <p>The attacker did not encrypt his nc connection, so we can view the data of his connection in unencrypted form using Follow TCP Stream.</p>
-                    
+
                     <a href="../img/post14/image5.png">
                         <img class="img-responsive" src="../img/post14/image5.png" alt="">
                     </a>
-                    
+
 					<pre><code>password: wh*******************t</code></pre>
-                    
+
 
                     <h3>How did the attacker establish persistence?</h3>
-                    
+
                     <p>After gaining root privileges, the attacker downloaded the backdoor. Link is a flag.</p>
-                    
+
                     <a href="../img/post14/image6.png">
                         <img class="img-responsive" src="../img/post14/image6.png" alt="">
                     </a>
-                              
+
 					<pre><code>https://******.c**/*********/***-*******r</code></pre>
 
                     <h3>Using the fasttrack wordlist, how many of the system passwords were crackable?</h3>
-                    
+
                     <p>I copied the contents of the shadow file from the network traffic package to the shadow file. Then using john and fasttrack rockyou I managed to crack hashes.</p>
-                    
+
                     <a href="../img/post14/image7.png">
                         <img class="img-responsive" src="../img/post14/image7.png" alt="">
                     </a>
 
                     <pre><code>john --wordlist=/usr/share/wordlists/fasttrack.txt shadow-file</code></pre>
                     <pre><code>john --show shadow-file</code></pre>
-                   
+
 
                     <h2 class="section-heading">Research - Analyse the code</h2>
-                    
+
                     <p><b>Story</b>: Now that you've found the code for the backdoor, it's time to analyse it.</p>
 
                     <h3>What's the default hash for the backdoor?</h3>
-                    
+
                     <p>First I will download the backdoor files.</p>
 
                     <a href="../img/post14/image8.png">
@@ -194,42 +194,42 @@
                     <a href="../img/post14/image9.png">
                         <img class="img-responsive" src="../img/post14/image9.png" alt="">
                     </a>
-                    
+
                     <pre><code>cat main.go</code></pre>
-                    
+
                     <p>Variable var hash string contains the default hash.</p>
 
-                    
+
                     <pre><code>bd*****************************************************************************************************************************e3</code></pre>
-                    
+
                     <h3>What's the hardcoded salt for the backdoor?</h3>
 
                     <p>Hardcoded salt can be found at the end of the code.</p>
-                   
+
                     <a href="../img/post14/image10.png">
                         <img class="img-responsive" src="../img/post14/image10.png" alt="">
                     </a>
 
-                    <pre><code>1c3***************************05</code></pre>   
-                    
+                    <pre><code>1c3***************************05</code></pre>
+
                     <h3>What was the hash that the attacker used? - go back to the PCAP for this!</h3>
 
                     <p>If you go back to the network traffic dump, you can see the hash that the attacker used.</p>
-                    
+
                     <a href="../img/post14/image11.png">
                         <img class="img-responsive" src="../img/post14/image11.png" alt="">
                     </a>
-                    
+
                     <pre><code>6d05***************************************************************************************************************************ed</code></pre>
 
                     <h3>Crack the hash using rockyou and a cracking tool of your choice. What's the password?</h3>
 
                     <p>In order to crack a hash, I need to combine the hash and the salt.</p>
-                    
+
                     <a href="../img/post14/image12.png">
                         <img class="img-responsive" src="../img/post14/image12.png" alt="">
                     </a>
-                    
+
                     <p>Now with john and rockyou wordlist I get the password.</p>
 
                     <a href="../img/post14/image13.png">
@@ -239,27 +239,27 @@
                     <pre><code>n********6</code></pre>
 
                     <h2 class="section-heading">Attack - Get back in!</h2>
-                    
+
                     <p><b>Story:</b> Now that the incident is investigated, Paradox needs someone to take control of the Overpass production server again. There's flags on the box that Overpass can't afford to lose by formatting the server!</p>
 
                     <h3>The attacker defaced the website. What message did they leave as a heading?</h3>
-                    
+
                     <p>In order to find out what is written in the header, I will send a GET request to the web server using curl.</p>
 
                     <a href="../img/post14/image14.png">
                         <img class="img-responsive" src="../img/post14/image14.png" alt="">
                     </a>
-                    
+
                     <pre><code>curl machine_ip</code></pre>
-					 
+
                     <pre><code>H*******************n</code></pre>
 
                     <h3>What's the user flag?</h3>
-                    
+
                     <p>First scan open ports via nmap.</p>
-                    
+
                     <pre><code>nmap -A -T5 -p17-10000 machine_ip</code></pre>
-                    
+
                     <a href="../img/post14/image15.png">
                         <img class="img-responsive" src="../img/post14/image15.png" alt="">
                     </a>
@@ -289,7 +289,7 @@
                     <pre><code>ls -la </code></pre>
                     <pre><code>./.suid_bash -p</code></pre>
                     <pre><code>whoami</code></pre>
-                    
+
 					<p>With cat I view the root flag in /root/root.txt</p>
 
                     <a href="../img/post14/image19.png">
@@ -313,29 +313,11 @@
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                     <ul class="list-inline text-center">
                         <li>
-                            <a href="https://twitter.com/l3tt_0x7b" title="I'm on Twitter">
+                            <a href="https://twitter.com/laf3r_" title="I'm on Twitter">
                                 <span class="fa-stack fa-lg">
                                     <i class="fa fa-circle fa-stack-2x"></i>
                                     <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
                                 </span>
-                            </a>
-                        </li>
-						
-                        <li>
-                            <a href="https://www.reddit.com/user/L3tt_0x7b" title="I'm on Reddit">
-                                <span class="fa-stack fa-lg">
-                                    <i class="fa fa-circle fa-stack-2x"></i>
-                                    <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
-								</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="http://i90242s0.beget.tech/" title="My forum">
-                                <span class="fa-stack fa-lg">
-									<i class="fa fa-circle fa-stack-2x"></i>
-                                    <i class="fa fa-comments-o fa-stack-1x fa-inverse"></i>
-									
-								</span>
                             </a>
                         </li>
                     </ul>

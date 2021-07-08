@@ -10,11 +10,11 @@
     <meta name="author" content="">
 
     <title>Hackthebox OpenKeyS Write-Up</title>
-	
+
 	<!-- Favicon -->
-	<link rel="shortcut icon" href="../img/favicon.ico" type="image/icon"> 
+	<link rel="shortcut icon" href="../img/favicon.ico" type="image/icon">
 	<link rel="icon" href="../img/favicon.ico" type="image/icon">
-	
+
     <!-- Bootstrap Core CSS -->
     <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
@@ -75,9 +75,9 @@
                         <h1>&nbsp;</h1>
                         <h1>&nbsp;</h1>
 
-                        
+
                         <h2 class="subheading">Difficulty: Medium</h2>
-                        
+
                         <span class="meta">Posted by <a href="../about/">Admin</a> on December 12, 2020</span>
                     </div>
                 </div>
@@ -90,104 +90,104 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                    
+
 					<h2 class="section-heading">Foothold</h2>
 
                     <p>First, let's scan the ip address.</p>
-					
+
 					<a href="../img/post12/image1.png">
                         <img class="img-responsive" src="../img/post12/image1.png" alt="">
                     </a>
-					
+
 					<pre><code>nmap -A -T5 -sC -p19-65000 10.10.10.199</code></pre>
 
                     <p>And so, as we see, scanning with nmap showed us that the operating system is OpenBSD installed on the machine.Also i added openkeys.htb at my /etc/hosts file. Now it's worth checking the web server</p>
-					
+
 					<a href="../img/post12/image2.png">
                         <img class="img-responsive" src="../img/post12/image2.png" alt="">
                     </a>
-					
+
                     <pre><code>vim /etc/hosts</code></pre>
-					
+
 					<p>I wonder if this is the login page.</p>
-					
+
 					<a href="../img/post12/image3.png">
                         <img class="img-responsive" src="../img/post12/image3.png" alt="">
                     </a>
-                    
+
                     <h2 class="section-heading">User</h2>
-					
+
 					<p>First, I'll run ffuf to find interesting files or directories and while ffuf is fuzzing the web page, I will proceed to study the login page with burp suite.</p>
-					
+
                     <pre><code>ffuf -u http://openkeys.htb/FUZZ -w /usr/share/wordlists/dirb/big.txt -e .txt,.html,.php -c</code></pre>
 
 					<a href="../img/post12/image4.png">
                         <img class="img-responsive" src="../img/post12/image4.png" alt="">
                     </a>
-					
+
 					<p>As you can see, the post request is quite simple and we can try using hydra to brute force credentials, but I think this is not our way.  Now I think we need to take a look at what ffuf found</p>
-					
-					
+
+
 					<a href="../img/post12/image5.png">
                         <img class="img-responsive" src="../img/post12/image5.png" alt="">
                     </a>
-					
+
                     <p>
 I think we should check the includes web directory</p>
 
 					<a href="../img/post12/image6.png">
                         <img class="img-responsive" src="../img/post12/image6.png" alt="">
                     </a>
-					
+
 					<p>In the includes directory I found auth.php and auth.php.swp. In order to restore the contents of the auth.php file, I will use the <b>auth.php.swp</b> file</p>
-					
+
 					<pre><code>wget http://openkeys.htb/includes/auth.php.swp && vim -r auth.php.swp</code></pre>
-					
+
                     <p>Just click enter and we get the auth.php source code</p>
-					
+
                     <a href="../img/post12/image7.png">
                         <img class="img-responsive" src="../img/post12/image7.png" alt="">
                     </a>
-					
+
 					<p>It looks like the authorization mechanism is related to the file ../auth_helpers/check_auth, so we should download it and study</p>
-					
+
                     <a href="../img/post12/image8.png">
                         <img class="img-responsive" src="../img/post12/image8.png" alt="">
                     </a>
-					
-				    
+
+
                      <pre><code>curl openkeys.htb/../auth_helpers/check_auth -o check_auth && file check_auth</code></pre>
-					
-					<p>After I downloaded this file using curl I used the utility <b>file</b> to find out what the file is. File showed me that it was an executable file, but I could not run it. At first I thought it was time for <a href="https://en.wikipedia.org/wiki/Reverse_engineering">RE</a>, but then I came to the conclusion that <a href="https://en.wikipedia.org/wiki/Reverse_engineering">RE</a> is a rabbit hole so I need to take a different path. 
+
+					<p>After I downloaded this file using curl I used the utility <b>file</b> to find out what the file is. File showed me that it was an executable file, but I could not run it. At first I thought it was time for <a href="https://en.wikipedia.org/wiki/Reverse_engineering">RE</a>, but then I came to the conclusion that <a href="https://en.wikipedia.org/wiki/Reverse_engineering">RE</a> is a rabbit hole so I need to take a different path.
 After some time, I came to the conclusion that I need to check these files using the string utility. Using it, in the auth.php.swp file I found a potential username <b>jennifer</b>, and in the check_auth file I found the <b>libc.so.95.1</b> library</p>
-				    
+
                     <a href="../img/post12/image9.png">
                         <img class="img-responsive" src="../img/post12/image9.png" alt="">
                     </a>
-                   
+
 					<p>Googling I found an <a href="https://blog.firosolutions.com/exploits/cve-2019-19521-openbsd-libc-2019/">article</a> describing and exploiting a vulnerability in the libc library in OpenBSD. It wrote that using <b>-schallenge</b> you can bypass the authentication mechanism. Now let's try to exploit this vulnerability on the login page</p>
-					
+
                     <a href="../img/post12/image10.png">
                         <img class="img-responsive" src="../img/post12/image10.png" alt="">
                     </a>
 
                     <p>Now exploiting the vulnerability, I successfully login in web app</p>
-                    
+
                     <a href="../img/post12/image11.png">
                         <img class="img-responsive" src="../img/post12/image11.png" alt="">
                     </a>
-                    <p>"No keys found for user -schallenge". It looks like we need to get the ssh authentication key, but how do we do that if we can only bypass the authentication mechanism if we use the username -schallenge? After some thought, I came to the conclusion to put the username in the cookie with 
+                    <p>"No keys found for user -schallenge". It looks like we need to get the ssh authentication key, but how do we do that if we can only bypass the authentication mechanism if we use the username -schallenge? After some thought, I came to the conclusion to put the username in the cookie with
 firefox extension <b>Cookie-Editor</b> and I successfully logged in as jennifer and get id_rsa key (the username I got from the auth.php.swp file)</p>
-                    
+
                     <a href="../img/post12/image12.png">
                         <img class="img-responsive" src="../img/post12/image12.png" alt="">
                     </a>
 
 
                     <p>Now connect via ssh</p>
-                    
+
                     <pre><code>chmod 700 id_rsa</code></pre>
-                    
+
                     <pre><code>ssh jennifer@openkeys.htb -p 22 -i id_rsa</code></pre>
 
                     <a href="../img/post12/image13.png">
@@ -228,29 +228,11 @@ firefox extension <b>Cookie-Editor</b> and I successfully logged in as jennifer 
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                     <ul class="list-inline text-center">
                         <li>
-                            <a href="https://twitter.com/l3tt_0x7b" title="I'm on Twitter">
+                            <a href="https://twitter.com/laf3r_" title="I'm on Twitter">
                                 <span class="fa-stack fa-lg">
                                     <i class="fa fa-circle fa-stack-2x"></i>
                                     <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
                                 </span>
-                            </a>
-                        </li>
-						
-                        <li>
-                            <a href="https://www.reddit.com/user/L3tt_0x7b" title="I'm on Reddit">
-                                <span class="fa-stack fa-lg">
-                                    <i class="fa fa-circle fa-stack-2x"></i>
-                                    <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
-								</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="http://i90242s0.beget.tech/" title="My forum">
-                                <span class="fa-stack fa-lg">
-									<i class="fa fa-circle fa-stack-2x"></i>
-                                    <i class="fa fa-comments-o fa-stack-1x fa-inverse"></i>
-									
-								</span>
                             </a>
                         </li>
                     </ul>

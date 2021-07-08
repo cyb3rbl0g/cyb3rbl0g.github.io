@@ -10,11 +10,11 @@
     <meta name="author" content="">
 
     <title>Walkthrough Fuku vulnhub CTF</title>
-	
+
 	<!-- Favicon -->
-	<link rel="shortcut icon" href="../img/favicon.ico" type="image/icon"> 
+	<link rel="shortcut icon" href="../img/favicon.ico" type="image/icon">
 	<link rel="icon" href="../img/favicon.ico" type="image/icon">
-	
+
     <!-- Bootstrap Core CSS -->
     <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
@@ -90,70 +90,70 @@
 					<h2 class="section-heading">Scanning and Enum3ration</h2>
 
                     <p>First thing I do is find the ip address and port scan, after that I find the active Apache server on port 13370.</p>
-					
+
 					<a href="../img/post2/image1.png">
                         <img class="img-responsive" src="../img/post2/image1.png" alt="">
                     </a>
-					
+
                     <pre><code>arp-scan -l</code></pre>
 					<pre><code>nmap 192.168.2.102</code></pre>
 
                     <p>After going to a webpage, I see a web site running on joomla.</p>
-					
+
 					<a href="../img/post2/image2.png">
                         <img class="img-responsive" src="../img/post2/image2.png" alt="">
                     </a>
-					
+
 					<h2 class="section-heading">Getting shell</h2>
-					
+
 					<p>In source code of page you can find the version of joomla.</p>
-					
+
 					<a href="../img/post2/image3.png">
                         <img class="img-responsive" src="../img/post2/image3.png" alt="">
                     </a>
-					
+
 					<p>Yeah, this version of joomla has many vulnerabilities, but in this case I need an exploit for changing the administrator password (Joomla! 1.5.x - 'Token' Remote Admin Change Password).</p>
-					
+
 					<a href="../img/post2/image4.png">
                         <img class="img-responsive" src="../img/post2/image4.png" alt="">
                     </a>
-					
+
 					<pre><code>searchsploit joomla 1.5</code></pre>
-					
+
 					<p>After changing the administrator password, I successfully login into the site control panel.</p>
-					
+
 					<a href="../img/post2/image5.png">
                         <img class="img-responsive" src="../img/post2/image5.png" alt="">
                     </a>
-					
+
 					<p>After loading php reverse shell i get www-data.</p>
-					
+
 					<a href="../img/post2/image6.png">
                         <img class="img-responsive" src="../img/post2/image6.png" alt="">
                     </a>
-					
+
 					<h2 class="section-heading">Privil3ge escalation</h2>
-					
+
 					<p>In running processes you can see running Chkrootkit 0.49</p>
-				
+
                     <a href="../img/post2/image7.png">
                         <img class="img-responsive" src="../img/post2/image7.png" alt="">
                     </a>
-					
+
 					<pre><code>ps -aux</code></pre>
-					
+
 					<a href="../img/post2/image8.png">
                         <img class="img-responsive" src="../img/post2/image8.png" alt="">
                     </a>
-					
+
 					<p>After analyzing the vulnerability on exploitdb, I realized that I needed to create a file in the / tmp directory that should change the administrator password.</p>
-					
+
 					<a href="../img/post2/image9.png">
                         <img class="img-responsive" src="../img/post2/image9.png" alt="">
                     </a>
-					
+
 					<p>Now connect via ssh and get root.</p>
-					
+
 					<a href="../img/post2/image10.png">
                         <img class="img-responsive" src="../img/post2/image10.png" alt="">
                     </a>
@@ -172,29 +172,11 @@
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                     <ul class="list-inline text-center">
                         <li>
-                            <a href="https://twitter.com/l3tt_0x7b" title="I'm on Twitter">
+                            <a href="https://twitter.com/laf3r_" title="I'm on Twitter">
                                 <span class="fa-stack fa-lg">
                                     <i class="fa fa-circle fa-stack-2x"></i>
                                     <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
                                 </span>
-                            </a>
-                        </li>
-						
-                        <li>
-                            <a href="https://www.reddit.com/user/L3tt_0x7b" title="I'm on Reddit">
-                                <span class="fa-stack fa-lg">
-                                    <i class="fa fa-circle fa-stack-2x"></i>
-                                    <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
-								</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="http://i90242s0.beget.tech/" title="My forum">
-                                <span class="fa-stack fa-lg">
-									<i class="fa fa-circle fa-stack-2x"></i>
-                                    <i class="fa fa-comments-o fa-stack-1x fa-inverse"></i>
-									
-								</span>
                             </a>
                         </li>
                     </ul>

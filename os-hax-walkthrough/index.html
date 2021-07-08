@@ -10,11 +10,11 @@
     <meta name="author" content="">
 
     <title>Walkthrough Os-Hax vulnhub CTF</title>
-	
+
 	<!-- Favicon -->
-	<link rel="shortcut icon" href="../img/favicon.ico" type="image/icon"> 
+	<link rel="shortcut icon" href="../img/favicon.ico" type="image/icon">
 	<link rel="icon" href="../img/favicon.ico" type="image/icon">
-	
+
     <!-- Bootstrap Core CSS -->
     <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
@@ -90,77 +90,77 @@
 					<h2 class="section-heading">Boot2User</h2>
 
                     <p>At this stage, we will scan the network and find the ip address of the machine.</p>
-					
+
 					<a href="../img/post1/image1.png">
                         <img class="img-responsive" src="../img/post1/image1.png" alt="">
                     </a>
-					
+
 					<pre><code>arp-scan -l</code></pre>
 
                     <p>As we see this is 192.168.2.102. Next we will see open ports.</p>
-					
+
 					<a href="../img/post1/image2.png">
                         <img class="img-responsive" src="../img/post1/image2.png" alt="">
                     </a>
 					<pre><code>nmap 192.168.2.102</code></pre>
-					
+
 					<p>Open ssh and apache, so let's check the web page.</p>
-					
+
 					<a href="../img/post1/image3.png">
                         <img class="img-responsive" src="../img/post1/image3.png" alt="">
                     </a>
-					
+
 					<p>Now let's find something interesting.</p>
-					
+
 					<pre><code>nikto -h 192.168.2.102 -p 80</code></pre>
-					
+
 					<a href="../img/post1/image4.png">
                         <img class="img-responsive" src="../img/post1/image4.png" alt="">
                     </a>
-					
+
 					<p>In directory /img/ nikto found an interesting file called flaghost.png. After scanning the image through exiftool, I get a new directory names, in which I find the file "flag2.txt"</p>
-					
+
 					<pre><code>192.168.2.102/passw@45/</code></pre>
-					
+
 					<a href="../img/post1/image5.png">
                         <img class="img-responsive" src="../img/post1/image5.png" alt="">
                     </a>
-					
+
 					<a href="../img/post1/image6.png">
                         <img class="img-responsive" src="../img/post1/image6.png" alt="">
                     </a>
-					
+
 					<p>After decrypting a mysterious file that is encrypted with the Brainfuck cipher, I received data for ssh authorization.</p>
-					
+
 					<pre><code>web:Hacker@4514</code></pre>
-					
+
 					<a href="../img/post1/image7.png">
                         <img class="img-responsive" src="../img/post1/image7.png" alt="">
                     </a>
-					
+
 					<p>In home directory I found a flag.</p>
-					
+
 					<a href="../img/post1/image8.png">
                         <img class="img-responsive" src="../img/post1/image8.png" alt="">
                     </a>
-					
+
                     <h2 class="section-heading">Boot2R00t</h2>
-					
+
 					<p>Using following command i see that I can run awk using root privileges.</p>
-				
+
                     <a href="../img/post1/image9.png">
                         <img class="img-responsive" src="../img/post1/image9.png" alt="">
                     </a>
 					<pre><code>sudo -l</code></pre>
-					
+
 					<p>Now i get root using awk.</p>
-					
+
 					<a href="../img/post1/image10.png">
                         <img class="img-responsive" src="../img/post1/image10.png" alt="">
                     </a>
-                    
+
 					<pre><code>sudo /usr/bin/awk 'BEGIN {system("/bin/sh")}'</code></pre>
-					
+
 					<p>The all. Thanks <a href="https://www.vulnhub.com/author/rahul-gehlaut,656/">Rahul Gehlaut</a> for CTF.</p>
 
                 </div>
@@ -177,29 +177,11 @@
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                     <ul class="list-inline text-center">
                         <li>
-                            <a href="https://twitter.com/l3tt_0x7b" title="I'm on Twitter">
+                            <a href="https://twitter.com/laf3r_" title="I'm on Twitter">
                                 <span class="fa-stack fa-lg">
                                     <i class="fa fa-circle fa-stack-2x"></i>
                                     <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
                                 </span>
-                            </a>
-                        </li>
-						
-                        <li>
-                            <a href="https://www.reddit.com/user/L3tt_0x7b" title="I'm on Reddit">
-                                <span class="fa-stack fa-lg">
-                                    <i class="fa fa-circle fa-stack-2x"></i>
-                                    <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
-								</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="http://i90242s0.beget.tech/" title="My forum">
-                                <span class="fa-stack fa-lg">
-									<i class="fa fa-circle fa-stack-2x"></i>
-                                    <i class="fa fa-comments-o fa-stack-1x fa-inverse"></i>
-									
-								</span>
                             </a>
                         </li>
                     </ul>

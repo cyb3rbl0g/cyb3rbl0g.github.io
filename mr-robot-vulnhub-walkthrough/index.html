@@ -10,11 +10,11 @@
     <meta name="author" content="">
 
     <title>Walkthrough Mr-Robot vulnhub CTF</title>
-	
+
 	<!-- Favicon -->
-	<link rel="shortcut icon" href="../img/favicon.ico" type="image/icon"> 
+	<link rel="shortcut icon" href="../img/favicon.ico" type="image/icon">
 	<link rel="icon" href="../img/favicon.ico" type="image/icon">
-	
+
     <!-- Bootstrap Core CSS -->
     <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
@@ -90,7 +90,7 @@
 					<h2 class="section-heading">Explor1ng</h2>
 
                     <p>Good day, today I walkthrough CTF dedicated to my favorite TV series "Mr Robot". I will use the netdiscover utility to determine the desired ip address.</p>
-					
+
 					<a href="../img/post3/image1.png">
                         <img class="img-responsive" src="../img/post3/image1.png" alt="">
                     </a>
@@ -98,83 +98,83 @@
                     <pre><code>netdiscover</code></pre>
 
                     <p>Scanning open ports, you can see the closed ssh port and two web ports https 443 and http 80.</p>
-					
+
 					<a href="../img/post3/image2.png">
                         <img class="img-responsive" src="../img/post3/image2.png" alt="">
                     </a>
-					
+
 					<p>On port 80, I see something like a UNIX terminal, but it's just script.</p>
-					
+
 					<a href="../img/post3/image3.png">
                         <img class="img-responsive" src="../img/post3/image3.png" alt="">
                     </a>
-					
+
 					<p>In the robots.txt file I find two interesting files, the first one is a wordlist and second is the first flag.</p>
-					
+
 					<a href="../img/post3/image4.png">
                         <img class="img-responsive" src="../img/post3/image4.png" alt="">
                     </a>
-					
+
 					<a href="../img/post3/image5.png">
                         <img class="img-responsive" src="../img/post3/image5.png" alt="">
                     </a>
-					
+
 					<h2 class="section-heading">Shell</h2>
-					
+
 					<p>Using dirbuster utility i find wordpress blog and login page.</p>
-					
+
 					<a href="../img/post3/image6.png">
                         <img class="img-responsive" src="../img/post3/image6.png" alt="">
                     </a>
-					
+
 					<p>Since the main character is called elliot we can assume that it will be username. Using the earlier received wordlist and WPScan I will find out credentials for WordPress.</p>
-					
+
 					<a href="../img/post3/image7.png">
                         <img class="img-responsive" src="../img/post3/image7.png" alt="">
                     </a>
-					
+
 					<pre><code>wpscan --usernames Elliot --passwords /root/Mr_Robot/fsocity.dic --url http://192.168.2.102/wp-login.php</code></pre>
-					
+
 					<pre><code>Elliot:ER28–0652</code></pre>
-					
+
 					<p>Now i load php reverse shell and log in</p>
-				
+
                     <a href="../img/post3/image8.png">
                         <img class="img-responsive" src="../img/post3/image8.png" alt="">
                     </a>
-					
+
 					<h2 class="section-heading">Boot2User</h2>
-					
+
 					<p>In the robot user’s home folder, I find the file with the password encrypted by the MD5 algorithm, to crack it I go to the hashkiller website and get the user password.</p>
-					
+
 					<a href="../img/post3/image9.png">
                         <img class="img-responsive" src="../img/post3/image9.png" alt="">
                     </a>
-					
+
 					<pre><code>robot:abcdefghijklmnopqrstuvwxyz</code></pre>
-					
+
 					<p>Since the ssh port the port is closed I use su to get user rights. And I get 2 flag.</p>
-					
-					
+
+
 					<a href="../img/post3/image10.png">
                         <img class="img-responsive" src="../img/post3/image10.png" alt="">
                     </a>
-					
+
 					<pre><code>python -c 'import pty; pty.spawn("/bin/sh")'</code></pre>
-					
+
 					<pre><code>su robot</code></pre>
-					
+
 					<h2 class="section-heading">R00t access</h2>
-					
+
 					<p>Using nmap, I get root access and get the last third flag.</p>
-					
+
 					<a href="../img/post3/image11.png">
                         <img class="img-responsive" src="../img/post3/image11.png" alt="">
                     </a>
-					
+
 					<pre><code>/usr/local/bin/nmap --interactive</code></pre>
 					<pre><code>!sh</code></pre>
-					
+
                 </div>
             </div>
         </div>
@@ -189,29 +189,11 @@
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                     <ul class="list-inline text-center">
                         <li>
-                            <a href="https://twitter.com/l3tt_0x7b" title="I'm on Twitter">
+                            <a href="https://twitter.com/laf3r_" title="I'm on Twitter">
                                 <span class="fa-stack fa-lg">
                                     <i class="fa fa-circle fa-stack-2x"></i>
                                     <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
                                 </span>
-                            </a>
-                        </li>
-						
-                        <li>
-                            <a href="https://www.reddit.com/user/L3tt_0x7b" title="I'm on Reddit">
-                                <span class="fa-stack fa-lg">
-                                    <i class="fa fa-circle fa-stack-2x"></i>
-                                    <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
-								</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="http://i90242s0.beget.tech/" title="My forum">
-                                <span class="fa-stack fa-lg">
-									<i class="fa fa-circle fa-stack-2x"></i>
-                                    <i class="fa fa-comments-o fa-stack-1x fa-inverse"></i>
-									
-								</span>
                             </a>
                         </li>
                     </ul>
